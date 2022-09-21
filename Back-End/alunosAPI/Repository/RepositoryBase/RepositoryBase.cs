@@ -25,7 +25,7 @@ namespace alunosAPI.Repository.RepositoryBase
 
         public void Atualizar(T entidade)
         {
-            Entidade().Update(entidade);
+           _context.Entry(entidade).State = EntityState.Modified;
             Salvar();
         }
 

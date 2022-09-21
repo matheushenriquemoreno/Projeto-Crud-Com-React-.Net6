@@ -1,4 +1,4 @@
-﻿using alunosAPI.Models;
+﻿using alunosAPI.Models.Entidades;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 

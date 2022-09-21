@@ -1,5 +1,5 @@
 ﻿using System.Reflection;
-using alunosAPI.Models;
+using alunosAPI.Models.Entidades;
 using Microsoft.EntityFrameworkCore;
 
 namespace alunosAPI.Context

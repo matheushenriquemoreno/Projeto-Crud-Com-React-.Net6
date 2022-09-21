@@ -1,5 +1,5 @@
 ﻿using alunosAPI.Context;
-using alunosAPI.Models;
+using alunosAPI.Models.Entidades;
 using alunosAPI.Repository.RepositoryBase;
 
 namespace alunosAPI.Repository.RepositoryAluno

@@ -1,6 +1,6 @@
 ﻿using alunosAPI.Models.EntidadeBase;
 
-namespace alunosAPI.Models
+namespace alunosAPI.Models.Entidades
 {
     public class Aluno : IEntidadeBase
     {

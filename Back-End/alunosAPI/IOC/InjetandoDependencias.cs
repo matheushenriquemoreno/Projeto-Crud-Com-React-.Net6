@@ -1,5 +1,8 @@
 ﻿using alunosAPI.Context;
+using alunosAPI.Models.Entidades;
+using alunosAPI.Models.Validadores;
 using alunosAPI.Repository.RepositoryAluno;
+using FluentValidation;
 using Microsoft.EntityFrameworkCore;
 
 namespace System
@@ -10,6 +13,7 @@ namespace System
         public static void ConfigurarDependencias(this IServiceCollection service)
         {
             service.AddTransient<IRepositoryAluno, RepositoryAluno>();
+            service.AddScoped<IValidator<Aluno>, AlunoValidator>();
         }
 
         public static void ConfigurarBanco(this IServiceCollection service, WebApplicationBuilder builder)
