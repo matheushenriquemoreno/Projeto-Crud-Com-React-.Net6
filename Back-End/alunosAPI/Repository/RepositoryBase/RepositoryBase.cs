@@ -20,13 +20,13 @@ namespace alunosAPI.Repository.RepositoryBase
         public async void Adicionar(T entidade)
         {
             await Entidade().AddAsync(entidade);
-            Salvar();
+            await Salvar();
         }
 
-        public void Atualizar(T entidade)
+        public async Task Atualizar(T entidade)
         {
            _context.Entry(entidade).State = EntityState.Modified;
-            Salvar();
+            await Salvar();
         }
 
         public async Task<T> BuscarPeloID(int id)
@@ -44,13 +44,13 @@ namespace alunosAPI.Repository.RepositoryBase
             return await Entidade().Where(express).ToListAsync();
         }
 
-        public void Excluir(T entidade)
+        public async void Excluir(T entidade)
         {
             Entidade().Remove(entidade);
-            Salvar();
+           await Salvar();
         }
 
-        public async void Salvar()
+        public async Task Salvar()
         {
           await _context.SaveChangesAsync();
         }

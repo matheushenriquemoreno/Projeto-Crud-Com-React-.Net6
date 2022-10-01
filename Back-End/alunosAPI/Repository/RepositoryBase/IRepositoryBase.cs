@@ -9,14 +9,14 @@ namespace alunosAPI.Repository.RepositoryBase
 
         Task<IEnumerable<T>> BuscarTodos();
 
-        Task<IEnumerable<T>> BuscarTodosOnde(Expression<Func<T, bool>> express);
+        Task<IEnumerable<T>> BuscarTodosOnde(Expression<Action<T>> express);
 
-        void Adicionar(T entidade);
+        Task Adicionar(T entidade);
 
-        void Atualizar(T entidade);
+        Task Atualizar(T entidade);
 
-        void Salvar();
-        void Excluir(T entidade);
+        Task Salvar();
+        Task Excluir(T entidade);
 
     }
 }
