@@ -9,7 +9,7 @@ namespace alunosAPI.Repository.RepositoryBase
 
         Task<IEnumerable<T>> BuscarTodos();
 
-        Task<IEnumerable<T>> BuscarTodosOnde(Expression<Action<T>> express);
+        Task<IEnumerable<T>> BuscarTodosOnde(Expression<Func<T, bool>> express);
 
         Task Adicionar(T entidade);
 

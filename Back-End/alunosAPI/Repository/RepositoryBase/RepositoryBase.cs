@@ -17,7 +17,7 @@ namespace alunosAPI.Repository.RepositoryBase
 
         public DbSet<T> Entidade() => _context.Set<T>();
 
-        public async void Adicionar(T entidade)
+        public async Task Adicionar(T entidade)
         {
             await Entidade().AddAsync(entidade);
             await Salvar();
@@ -44,7 +44,7 @@ namespace alunosAPI.Repository.RepositoryBase
             return await Entidade().Where(express).ToListAsync();
         }
 
-        public async void Excluir(T entidade)
+        public async Task Excluir(T entidade)
         {
             Entidade().Remove(entidade);
            await Salvar();
