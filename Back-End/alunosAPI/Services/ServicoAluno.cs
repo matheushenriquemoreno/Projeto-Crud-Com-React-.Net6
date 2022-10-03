@@ -1,4 +1,6 @@
-﻿using System.Linq.Expressions;
+﻿using System;
+using System.Collections;
+using System.Linq.Expressions;
 using alunosAPI.Models.Entidades;
 using alunosAPI.Repository.RepositoryAluno;
 using FluentValidation;
@@ -17,27 +19,55 @@ namespace alunosAPI.Services
             _validator = validator;
         }
 
-
-        public bool Adicionar(Aluno aluno, out List<string> Erros)
+        public async Task<(bool valido, List<string> Erros)> Adicionar(Aluno aluno)
         {
-            Erros = new List<string>();
+            var Erros = new List<string>();
 
             var resultado = _validator.Validate(aluno);
             
             if (resultado.IsValid)
             {
-                _repositoryAluno.Adicionar(aluno);
-                return true;
+                aluno.Matricula = CriarMatriculaAluno();
+                await _repositoryAluno.Adicionar(aluno);
+                return (true, Erros);
             }
 
             Erros = resultado.Errors.Select(x => x.ErrorMessage).ToList();
-            return false;
+            return (false, Erros);
+        }
+
+        private string CriarMatriculaAluno()
+        {
+
+            var matricula = CriaStringMatricula();
+
+            while (_repositoryAluno.BuscarTodosOnde(x => x.Matricula == matricula).Result.FirstOrDefault() != null)
+            {
+                matricula = CriaStringMatricula();
+            }
+
+            return matricula;
+        }
+        private string CriaStringMatricula()
+        {
+            Random randNum = new Random();
+
+            var parte1Matricula = randNum.Next(1000, 9999);
+
+            var parte2MAtricula = randNum.Next(10, 99);
+
+           return $"{parte1Matricula}-{parte2MAtricula}";
 
         }
 
-        public void BuscarTodosOnde(Expression<Func<Aluno, bool>> express)
+        public async Task<IEnumerable<Aluno>> BuscarTodosOnde(Expression<Func<Aluno, bool>> express)
         {
-            _repositoryAluno.BuscarTodosOnde(express);
+            return await _repositoryAluno.BuscarTodosOnde(express);
+        }
+
+        public async Task<IEnumerable<Aluno>> BuscarTodos()
+        {
+          return  await _repositoryAluno.BuscarTodos();
         }
     }
 }

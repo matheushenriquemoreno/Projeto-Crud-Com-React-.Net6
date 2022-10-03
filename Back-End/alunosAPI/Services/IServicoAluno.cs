@@ -5,11 +5,8 @@ namespace alunosAPI.Services
 {
     public interface IServicoAluno
     {
-
-        bool Adicionar(Aluno aluno, out List<string> Erros);
-
-        void BuscarTodosOnde(Expression<Func<Aluno, bool>> express);
-
-
+        Task<(bool valido, List<string> Erros)> Adicionar(Aluno aluno);
+        Task<IEnumerable<Aluno>> BuscarTodosOnde(Expression<Func<Aluno, bool>> express);
+        Task<IEnumerable<Aluno>> BuscarTodos();
     }
 }
