@@ -12,7 +12,11 @@ namespace alunosAPI.Models.Entidades
 
         public int Idade { get; set; }
 
+        public string Matricula { get; set; }
 
-
+        public Aluno()
+        {
+                
+        }
     }
 }
