@@ -9,14 +9,20 @@ using static System.Net.Mime.MediaTypeNames;
 
 var builder = WebApplication.CreateBuilder(args);
 
+builder.Services.ConfigurarBanco(builder);
+builder.Services.ConfigurarDependencias();
+builder.Services.ConfigurarAutentificacao(builder);
 
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
+
+/*Configurando o swager para receber o token jwt*/
 builder.Services.AddSwaggerGen(c =>
 {
 
     c.SwaggerDoc("v1", new OpenApiInfo { Title = "apiagenda", Version = "v1" });
-
+    
+ 
     c.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme()
     {
         Name = "Authorization",
@@ -42,28 +48,6 @@ builder.Services.AddSwaggerGen(c =>
                 });
 });
 
-builder.Services.ConfigurarBanco(builder);
-builder.Services.ConfigurarDependencias();
-
-
-
-builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
-    .AddJwtBearer(options =>
-    {
-        options.TokenValidationParameters = new TokenValidationParameters
-        {
-            ValidateIssuer = true,
-            ValidateAudience = true,
-            ValidateLifetime = true,
-            ValidateIssuerSigningKey = true,
-            ValidIssuer = builder.Configuration["Jwt:Issuer"],
-            ValidAudience = builder.Configuration["Jwt:Audience"],
-            IssuerSigningKey = new SymmetricSecurityKey(
-                Encoding.UTF8.GetBytes(builder.Configuration["Jwt:key"]))
-        };
-    });
-
-
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
@@ -73,7 +57,7 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
-
+/*Configurando o cors para front end poder acessar*/
 app.UseCors(options =>
 {
     options.WithOrigins("http://127.0.0.1:5173/");

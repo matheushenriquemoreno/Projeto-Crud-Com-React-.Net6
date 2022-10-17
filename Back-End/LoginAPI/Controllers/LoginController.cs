@@ -3,6 +3,7 @@ using System.Security.Claims;
 using System.Text;
 using LoginAPI.DTO;
 using LoginAPI.Services;
+using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.JsonWebTokens;
@@ -13,6 +14,7 @@ namespace LoginAPI.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+   
     public class LoginController : ControllerBase
     {
         private readonly IConfiguration _configuration;
@@ -44,7 +46,6 @@ namespace LoginAPI.Controllers
             ModelState.AddModelError("CriacaoUsuario", "Erro ao criar usuario");
             return BadRequest();
         }
-
 
         [HttpPost("LogarUsuario")]
         public async Task<ActionResult<TokenUsuario>> LogarUsuario([FromBody] LoginDTO model)

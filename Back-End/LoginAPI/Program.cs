@@ -10,14 +10,16 @@ using Microsoft.IdentityModel.Tokens;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
+builder.Services.AddScoped<IAutentificacao, ServicoAutentificacao>();
+builder.Services.AddDbContext<AppLoginContext>(x => {
+    x.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"));
+});
+
 
 builder.Services.AddControllers();
-// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
-builder.Services.AddScoped<IAutentificacao, ServicoAutentificacao>();
 
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
     .AddJwtBearer(options =>
@@ -39,11 +41,6 @@ builder.Services.AddIdentity<IdentityUser, IdentityRole>()
     .AddEntityFrameworkStores<AppLoginContext>()
     .AddDefaultTokenProviders();
 
-builder.Services.AddDbContext<AppLoginContext>(x => {
-    x.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"));
-});
-
-
 
 builder.Services.AddCors();
 
@@ -55,6 +52,16 @@ if (app.Environment.IsDevelopment())
     app.UseSwagger();
     app.UseSwaggerUI();
 }
+
+
+app.UseCors(options =>
+{
+    options.WithOrigins("http://127.0.0.1:5173/");
+    options.AllowAnyMethod();
+    options.AllowAnyHeader();
+    options.AllowAnyOrigin();
+});
+
 
 app.UseHttpsRedirection();
 
