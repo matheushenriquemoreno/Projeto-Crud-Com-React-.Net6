@@ -14,9 +14,12 @@ namespace alunosAPI.Models.Entidades
 
         public string Matricula { get; set; }
 
-        public Aluno()
+        public Aluno(string nome, string email, int idade, string matricula)
         {
-                
+            Nome = nome;
+            Email = email;
+            Idade = idade;
+            Matricula = matricula;
         }
     }
 }

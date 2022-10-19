@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.Linq.Expressions;
+using alunosAPI.DTO;
 using alunosAPI.DTO.Aluno;
 using alunosAPI.Models.Entidades;
 using alunosAPI.Repository.RepositoryAluno;
@@ -11,7 +12,6 @@ namespace alunosAPI.Services
 {
     public class ServicoAluno : IServicoAluno
     {
-
         private readonly IRepositoryAluno _repositoryAluno;
         private readonly IValidator<Aluno> _validator;
         private readonly IMapper _mapper;
@@ -23,24 +23,6 @@ namespace alunosAPI.Services
             _mapper = mapper;
         }
 
-        public async Task<(bool valido, List<string> Erros)> Adicionar(CreateAlunoDTO alunoDTO)
-        {
-            var aluno = _mapper.Map<Aluno>(alunoDTO);
-
-            var Erros = new List<string>();
-
-            var resultado = _validator.Validate(aluno);
-            
-            if (resultado.IsValid)
-            {
-                aluno.Matricula = CriarMatriculaAluno();
-                await _repositoryAluno.Adicionar(aluno);
-                return (true, Erros);
-            }
-
-            Erros = resultado.Errors.Select(x => x.ErrorMessage).ToList();
-            return (false, Erros);
-        }
         public async Task<AlunoDTO> BuscarPelaMAtricula(string matricula)
         {
             var aluno = await _repositoryAluno.BuscarTodosOnde(x => x.Matricula.Equals(matricula));
@@ -63,7 +45,23 @@ namespace alunosAPI.Services
 
             return _mapper.Map<AlunoDTO>(aluno);
         }
-        public async Task<AlunoDTO> AlterarAluno(AlunoDTO alunoDTO)
+        public async Task<Resultado<AlunoDTO>> Adicionar(CreateAlunoDTO alunoDTO)
+        {
+            var aluno = _mapper.Map<Aluno>(alunoDTO);
+
+            var resultado = verificaUsuario<AlunoDTO>(aluno);
+
+            if (resultado.Valido)
+            {
+                aluno.Matricula = CriarMatriculaAluno();
+                await _repositoryAluno.Adicionar(aluno);
+            }
+
+            resultado.Entidade = _mapper.Map<AlunoDTO>(aluno);
+
+            return resultado;
+        }
+        public async Task<Resultado<AlunoDTO>> AlterarAluno(AlunoDTO alunoDTO)
         {
             var AlunoAtualizar = await _repositoryAluno.BuscarPeloID(alunoDTO.Id);
 
@@ -71,9 +69,16 @@ namespace alunosAPI.Services
             AlunoAtualizar.Email = alunoDTO.Email;
             AlunoAtualizar.Idade = alunoDTO.Idade;
 
-            await _repositoryAluno.Atualizar(AlunoAtualizar);
+            var resultado = verificaUsuario<AlunoDTO>(AlunoAtualizar);
 
-            return _mapper.Map<AlunoDTO>(AlunoAtualizar);
+            if (resultado.Valido)
+            {
+                await _repositoryAluno.Atualizar(AlunoAtualizar);
+            }
+
+            resultado.Entidade = _mapper.Map<AlunoDTO>(AlunoAtualizar);
+
+            return resultado;
         }
         public async Task RemoverAluno(int id)
         {
@@ -86,7 +91,21 @@ namespace alunosAPI.Services
         }
 
         #region Metodos privados
+        private Resultado<T> verificaUsuario<T>(Aluno aluno)
+        {
+            var resultado = _validator.Validate(aluno);
 
+            var retorno = new Resultado<T>();
+
+            if (resultado.IsValid)
+            {
+                retorno.Valido = true;
+                return retorno;
+            }
+
+            retorno.Erros = resultado.Errors.Select(x => x.ErrorMessage).ToList();
+            return retorno;
+        }
         private string CriarMatriculaAluno()
         {
 
@@ -109,8 +128,6 @@ namespace alunosAPI.Services
 
             return $"{parte1Matricula}-{parte2MAtricula}";
         }
-
-      
 
         #endregion
     }

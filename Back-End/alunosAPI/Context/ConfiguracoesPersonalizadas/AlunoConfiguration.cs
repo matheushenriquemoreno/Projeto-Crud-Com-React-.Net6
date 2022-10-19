@@ -15,13 +15,13 @@ namespace alunosAPI.Context.ConfiguracoesPersonalizadas
             builder.Property(x => x.Matricula).IsRequired().HasMaxLength(15);
             builder.HasData(
                 new Aluno
-                {
-                    Id = 1,
-                    Nome = "Matheus Henrique",
-                    Email = "Matheus@gmail.com",
-                    Idade = 21,
-                    Matricula = "1234-56"
-                }
+                (
+                     "Matheus Henrique",
+                     "Matheus@gmail.com",
+                     21,
+                     "1234-56"
+                )
+                { Id = 1 }
                 );
         }
 

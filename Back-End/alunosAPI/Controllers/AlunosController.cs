@@ -1,4 +1,5 @@
 ﻿using System.Linq;
+using System.Net;
 using alunosAPI.DTO.Aluno;
 using alunosAPI.Models.Entidades;
 using alunosAPI.Services;
@@ -16,7 +17,7 @@ namespace alunosAPI.Controllers
     public class AlunosController : ControllerBase
     {
         private readonly IServicoAluno servicoAluno;
-     
+
         public AlunosController(IServicoAluno servicoAluno)
         {
             this.servicoAluno = servicoAluno;
@@ -43,7 +44,7 @@ namespace alunosAPI.Controllers
             return Ok(aluno);
         }
 
-        [HttpGet("{Matricula}")]
+        [HttpGet("Matricula/{Matricula}")]
         public async Task<IActionResult> BuscarPelaMatricula(string Matricula)
         {
             try
@@ -52,9 +53,10 @@ namespace alunosAPI.Controllers
 
                 return Ok(aluno);
 
-            } catch(Exception ex)
+            }
+            catch (Exception ex)
             {
-                return BadRequest();
+                return new StatusCodeResult((int)HttpStatusCode.InternalServerError);
 
             }
         }
@@ -68,9 +70,9 @@ namespace alunosAPI.Controllers
 
             var result = await servicoAluno.Adicionar(aluno);
 
-            if (result.valido)
+            if (result.Valido)
             {
-                return Created("teste", new { });
+                return Created("api/alunos/", new { result.Entidade.Id });
             }
 
             return BadRequest(String.Join(", ", result.Erros));
@@ -91,16 +93,19 @@ namespace alunosAPI.Controllers
         }
 
         [HttpPut("{id:int}")]
-        public async Task<IActionResult> AtualizarAluno(int id, [FromBody] AlunoDTO aluno)
+        public async Task<IActionResult> AtualizarAluno(int id, [FromBody] AlunoDTO alunoDTO)
         {
-            if(id == aluno.Id)
-            {
-                var alunoAtualizado = await servicoAluno.AlterarAluno(aluno);
+            if (id != alunoDTO.Id)
+                return BadRequest("Ids diferentes");
 
-                return Ok($"Aluno com matricula: {alunoAtualizado.Matricula} foi atualizado com sucesso");
+            var result = await servicoAluno.AlterarAluno(alunoDTO);
+
+            if (result.Valido)
+            {
+                return Ok($"Aluno com matricula: {result.Entidade.Matricula} foi atualizado com sucesso");
             }
 
-            return BadRequest("Ids diferentes");
+            return BadRequest(String.Join(", ", result.Erros));
         }
 
         #endregion

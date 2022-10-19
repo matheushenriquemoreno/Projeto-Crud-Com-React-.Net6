@@ -69,6 +69,10 @@ namespace LoginAPI.Controllers
 
         }
 
+
+
+
+
         private ActionResult<TokenUsuario> CriarToken(LoginDTO model)
         {
             var claims = new[]
@@ -83,8 +87,7 @@ namespace LoginAPI.Controllers
             var credencial = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
 
 
-            var expiracao = DateTime.UtcNow.AddMinutes(10);
-
+            var expiracao = DateTime.Now.AddMinutes(1);
 
             JwtSecurityToken token = new JwtSecurityToken(
                 issuer: _configuration["Jwt:Issuer"],
