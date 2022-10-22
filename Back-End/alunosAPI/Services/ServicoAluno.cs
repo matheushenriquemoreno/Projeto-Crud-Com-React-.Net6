@@ -5,51 +5,51 @@ using alunosAPI.DTO;
 using alunosAPI.DTO.Aluno;
 using alunosAPI.Models.Entidades;
 using alunosAPI.Repository.RepositoryAluno;
+using alunosAPI.Services.ServiceBase;
 using AutoMapper;
 using FluentValidation;
 
 namespace alunosAPI.Services
 {
-    public class ServicoAluno : IServicoAluno
+    public class ServicoAluno : ServiceBase<Aluno>, IServicoAluno
     {
         private readonly IRepositoryAluno _repositoryAluno;
-        private readonly IValidator<Aluno> _validator;
-        private readonly IMapper _mapper;
 
-        public ServicoAluno(IRepositoryAluno repositoryAluno, IValidator<Aluno> validator, IMapper mapper)
+        public ServicoAluno(IRepositoryAluno repositoryAluno, IValidator<Aluno> validator, IMapper mapper) : base(validator, mapper)
         {
             _repositoryAluno = repositoryAluno;
-            _validator = validator;
-            _mapper = mapper;
         }
 
         public async Task<AlunoDTO> BuscarPelaMAtricula(string matricula)
         {
             var aluno = await _repositoryAluno.BuscarTodosOnde(x => x.Matricula.Equals(matricula));
 
-            var alunosDTO = _mapper.Map<AlunoDTO>(aluno.FirstOrDefault());
+            var alunosDTO = Mapper.Map<AlunoDTO>(aluno.FirstOrDefault());
 
             return alunosDTO;
         }
+
         public async Task<IEnumerable<AlunoDTO>> BuscarTodos()
         {
             var alunos = await _repositoryAluno.BuscarTodos();
 
-            var alunosDTO = _mapper.Map<IEnumerable<AlunoDTO>>(alunos);
+            var alunosDTO = Mapper.Map<IEnumerable<AlunoDTO>>(alunos);
 
             return alunosDTO;
         }
+
         public async Task<AlunoDTO> BuscarPeloId(int id)
         {
            var aluno = await _repositoryAluno.BuscarPeloID(id);
 
-            return _mapper.Map<AlunoDTO>(aluno);
+            return Mapper.Map<AlunoDTO>(aluno);
         }
+
         public async Task<Resultado<AlunoDTO>> Adicionar(CreateAlunoDTO alunoDTO)
         {
-            var aluno = _mapper.Map<Aluno>(alunoDTO);
+            var aluno = Mapper.Map<Aluno>(alunoDTO);
 
-            var resultado = verificaUsuario<AlunoDTO>(aluno);
+            var resultado = VerificaEntidadeEstaValida<AlunoDTO>(aluno);
 
             if (resultado.Valido)
             {
@@ -57,10 +57,11 @@ namespace alunosAPI.Services
                 await _repositoryAluno.Adicionar(aluno);
             }
 
-            resultado.Entidade = _mapper.Map<AlunoDTO>(aluno);
+            resultado.Entidade = Mapper.Map<AlunoDTO>(aluno);
 
             return resultado;
         }
+
         public async Task<Resultado<AlunoDTO>> AlterarAluno(AlunoDTO alunoDTO)
         {
             var AlunoAtualizar = await _repositoryAluno.BuscarPeloID(alunoDTO.Id);
@@ -69,17 +70,18 @@ namespace alunosAPI.Services
             AlunoAtualizar.Email = alunoDTO.Email;
             AlunoAtualizar.Idade = alunoDTO.Idade;
 
-            var resultado = verificaUsuario<AlunoDTO>(AlunoAtualizar);
+            var resultado = VerificaEntidadeEstaValida<AlunoDTO>(AlunoAtualizar);
 
             if (resultado.Valido)
             {
                 await _repositoryAluno.Atualizar(AlunoAtualizar);
             }
 
-            resultado.Entidade = _mapper.Map<AlunoDTO>(AlunoAtualizar);
+            resultado.Entidade = Mapper.Map<AlunoDTO>(AlunoAtualizar);
 
             return resultado;
         }
+
         public async Task RemoverAluno(int id)
         {
             var aluno = await _repositoryAluno.BuscarPeloID(id);
@@ -91,21 +93,6 @@ namespace alunosAPI.Services
         }
 
         #region Metodos privados
-        private Resultado<T> verificaUsuario<T>(Aluno aluno)
-        {
-            var resultado = _validator.Validate(aluno);
-
-            var retorno = new Resultado<T>();
-
-            if (resultado.IsValid)
-            {
-                retorno.Valido = true;
-                return retorno;
-            }
-
-            retorno.Erros = resultado.Errors.Select(x => x.ErrorMessage).ToList();
-            return retorno;
-        }
         private string CriarMatriculaAluno()
         {
 
@@ -118,6 +105,7 @@ namespace alunosAPI.Services
 
             return matricula;
         }
+
         private string CriaStringMatricula()
         {
             Random randNum = new Random();

@@ -5,6 +5,7 @@ using alunosAPI.Models.Entidades;
 using alunosAPI.Models.Validadores;
 using alunosAPI.Repository.RepositoryAluno;
 using alunosAPI.Services;
+using alunosAPI.Services.ServiceBase;
 using FluentValidation;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
@@ -18,9 +19,10 @@ namespace System
         public static void ConfigurarDependencias(this IServiceCollection service)
         {
             service.AddTransient<IRepositoryAluno, RepositoryAluno>();
-            service.AddTransient<IServicoAluno, ServicoAluno>();
-            service.AddScoped<IValidator<Aluno>, AlunoValidator>();
+            service.AddTransient<IValidator<Aluno>, AlunoValidator>();
             service.AddAutoMapper(typeof(AlunoMapper));
+
+            service.AddTransient<IServicoAluno, ServicoAluno>();
         }
 
         public static void ConfigurarBanco(this IServiceCollection service, WebApplicationBuilder builder)
