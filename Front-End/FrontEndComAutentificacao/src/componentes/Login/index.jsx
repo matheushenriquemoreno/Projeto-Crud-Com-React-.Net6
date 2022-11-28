@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import "./Login.css";
 import apiLogin from "../../Services/apiLogin";
-import { useNavigate, useSearchParams } from "react-router-dom";
+import { useNavigate, useSearchParams, Link } from "react-router-dom";
 
 const Login = () => {
   const [email, setEmail] = useState("");
@@ -60,7 +60,11 @@ const Login = () => {
           </div>
           <input type="submit" value="Login" className="enviar" />
           <div className="signup_link">
-            Novo Cliente? <a href="#">Cadastrar</a>
+            Novo Cliente?  
+
+            <Link to="/userCadastro">
+            Cadastrar
+            </Link>
           </div>
         </form>
       </div>
