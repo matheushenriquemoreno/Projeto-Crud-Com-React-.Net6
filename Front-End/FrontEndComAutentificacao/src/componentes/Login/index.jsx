@@ -31,7 +31,7 @@ const Login = () => {
   };
 
   useEffect(() => {
-    if (tokenExpirou) alert("token expirou vacilão");
+    if (tokenExpirou) alert("token expirou!");
   }, []);
 
   return (

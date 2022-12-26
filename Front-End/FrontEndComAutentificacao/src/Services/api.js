@@ -19,6 +19,7 @@ const instaciarAxios = () => {
   api.interceptors.response.use(
     (response) => response,
     (err) => {
+      console.log(err);
       if (err.response.status === 401) {
         sessionStorage.clear();
         localStorage.setItem("token", "");

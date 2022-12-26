@@ -5,6 +5,7 @@ using LoginAPI.DTO;
 using LoginAPI.Services;
 using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.JsonWebTokens;
 using Microsoft.IdentityModel.Tokens;
@@ -14,7 +15,7 @@ namespace LoginAPI.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-   
+
     public class LoginController : ControllerBase
     {
         private readonly IConfiguration _configuration;
@@ -62,16 +63,20 @@ namespace LoginAPI.Controllers
                 ModelState.AddModelError("CriacaoUsuario", "Erro ao criar usuario");
                 return BadRequest();
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
-                 return BadRequest();
+                return BadRequest();
             }
 
         }
 
+        [HttpGet("Usuarios")]
+        public async Task<ActionResult<IEnumerable<IdentityUser>>> BuscarUsuarios()
+        {
+            var user = await _autentificacao.UsuariosCadastrados();
 
-
-
+            return Ok(user);
+        }
 
         private ActionResult<TokenUsuario> CriarToken(LoginDTO model)
         {

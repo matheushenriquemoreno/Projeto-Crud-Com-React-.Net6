@@ -43,9 +43,10 @@ const NovoAluno = () => {
 
   const adicionar = async (data) => {
     try {
-      await api.post("api/alunos", data);
+      console.log(data);
+      const result = await api.post(`api/alunos`, data);
 
-      alert("Cadastro efetuado com sucesso");
+      alert("Aluno cadastrado com sucesso");
     } catch (erro) {
       alert(erro.response?.data ?? "Ocorreu um erro inesperado");
     }
@@ -88,6 +89,7 @@ const NovoAluno = () => {
             onChange={(e) => setNome(e.target.value)}
           />
           <label>Email</label>
+
           <input
             type="text"
             className="input"
@@ -96,6 +98,7 @@ const NovoAluno = () => {
             placeholder="Email"
             onChange={(e) => setEmail(e.target.value)}
           />
+
           <label>Idade</label>
           <input
             type="number"

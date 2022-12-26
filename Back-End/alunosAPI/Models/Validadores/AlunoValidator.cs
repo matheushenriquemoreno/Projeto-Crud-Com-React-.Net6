@@ -9,7 +9,8 @@ namespace alunosAPI.Models.Validadores
         {
 
             RuleFor(x => x.Nome).NotEmpty().MaximumLength(80);
-            RuleFor(x => x.Email).EmailAddress().NotEmpty().MaximumLength(100);
+            RuleFor(x => x.Email).NotEmpty().WithMessage("Email precisa ser informado!");
+            RuleFor(x => x.Email).EmailAddress().WithMessage("Email Invalido").MaximumLength(100);
             RuleFor(x => x.Idade).NotEmpty().WithMessage("A idade tem que ser informada");
             RuleFor(x => x.Idade).Custom((idade, aluno) =>
             {

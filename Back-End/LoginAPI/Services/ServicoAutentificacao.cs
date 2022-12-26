@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
 
 namespace LoginAPI.Services
 {
@@ -42,6 +43,12 @@ namespace LoginAPI.Services
         public async Task logout()
         {
             await _gerenciadorLogin.SignOutAsync();
+        }
+
+        public async Task<IEnumerable<IdentityUser>> UsuariosCadastrados()
+        {
+
+            return await _gerenciadorUsuario.Users.ToListAsync();
         }
     }
 }

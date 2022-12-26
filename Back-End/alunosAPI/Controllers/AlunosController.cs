@@ -67,15 +67,21 @@ namespace alunosAPI.Controllers
         [HttpPost]
         public async Task<IActionResult> CadastrarAluno([FromBody] CreateAlunoDTO aluno)
         {
-
-            var result = await servicoAluno.Adicionar(aluno);
-
-            if (result.Valido)
+            try
             {
-                return Created("api/alunos/", new { result.Entidade.Id });
-            }
+                var result = await servicoAluno.Adicionar(aluno);
 
-            return BadRequest(String.Join(", ", result.Erros));
+                if (result.Valido)
+                {
+                    return Created("api/alunos/", new { result.Entidade.Id });
+                }
+
+                return BadRequest(String.Join(", ", result.Erros));
+
+            } catch (Exception ex)
+            {
+                return StatusCode(500, new { erro = ex.Message });
+            }
         }
 
         [HttpDelete("{id:int}")]
