@@ -8,7 +8,7 @@
 Foi implementado a autentificarão via token jwt utilizando a biblioteca Identity da própria Microsoft, para essa implementação foi criado uma api que encapsula todos essas responsabilidades e as outras apis que seria a de aluno somente se preocupar com o porquê da sua existência.
 Em quesito de banco de dados utilizei a abordagem Code-First onde consiste em fazer primeiro os relacionamento dos seu objetos na camada de Programação orientada a objetos, e logo após fazer as entidades serem criadas no banco de dados pela ORM Entity Framework.
 <h3> No fron-end: </h3>
-Foi utilizado a biblioteca React poderosíssima que traz varias funcionalidade e liberdades que se espera em um projeto. Foi aplicado o conceito de consonantização e boas praticas de separação de pasta. Além da parte de login e logout do usuario, e com isso implementei um middleware que intercepta cada requisição do back-end para confirmar se o token do usuário ainda esta valido, não estando valido ele e redirecionando para a pagina principal.
+Foi utilizado a biblioteca React poderosíssima que traz varias funcionalidade e liberdades que se espera em um projeto. Foi aplicado o conceito de componentização e boas praticas de separação de pasta. Além da parte de login e logout do usuario, e com isso implementei um middleware que intercepta cada requisição do back-end para confirmar se o token do usuário ainda esta valido, não estando valido ele e redirecionando para a pagina principal.
 
 
 
