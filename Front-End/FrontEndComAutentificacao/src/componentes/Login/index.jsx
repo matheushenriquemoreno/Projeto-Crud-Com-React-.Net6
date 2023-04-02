@@ -4,8 +4,6 @@ import apiLogin from "../../Services/apiLogin";
 import { useNavigate, useSearchParams, Link } from "react-router-dom";
 
 const Login = () => {
-  const [email, setEmail] = useState("");
-  const [senha, setSenha] = useState("");
 
   const [searchParams] = useSearchParams();
   const tokenExpirou = searchParams.get("expirou");

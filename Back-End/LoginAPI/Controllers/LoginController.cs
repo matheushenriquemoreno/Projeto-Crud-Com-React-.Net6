@@ -83,7 +83,7 @@ namespace LoginAPI.Controllers
             var claims = new[]
             {
                 new Claim("Email", model.Email),
-                new Claim("meuToken", "Token Matheus"),
+                new Claim("Id", "AquiVaiUmID"),
                 new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString())
             };
 

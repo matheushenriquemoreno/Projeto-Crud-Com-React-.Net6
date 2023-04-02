@@ -5,7 +5,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace LoginAPI.Migrations
 {
-    public partial class cricaotabelaslogin : Migration
+    public partial class inicializando : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {

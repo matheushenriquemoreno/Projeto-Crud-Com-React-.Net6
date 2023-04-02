@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace LoginAPI.Migrations
 {
     [DbContext(typeof(AppLoginContext))]
-    [Migration("20221005001539_cricao tabelas login")]
-    partial class cricaotabelaslogin
+    [Migration("20230316132750_inicializando")]
+    partial class inicializando
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {

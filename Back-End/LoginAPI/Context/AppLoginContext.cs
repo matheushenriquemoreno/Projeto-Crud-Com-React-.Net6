@@ -9,8 +9,5 @@ namespace LoginAPI.Context
 
         public AppLoginContext(DbContextOptions<AppLoginContext> options)
             : base(options) { }
-
-
-
     }
 }

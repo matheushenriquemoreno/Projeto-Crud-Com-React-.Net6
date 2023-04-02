@@ -1,5 +1,7 @@
-﻿using System.Linq;
+﻿using System.IdentityModel.Tokens.Jwt;
+using System.Linq;
 using System.Net;
+using alunosAPI.DTO;
 using alunosAPI.DTO.Aluno;
 using alunosAPI.Models.Entidades;
 using alunosAPI.Services;
@@ -14,9 +16,10 @@ namespace alunosAPI.Controllers
     [Route("api/[controller]")]
     [ApiController]
     [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
-    public class AlunosController : ControllerBase
+    public class AlunosController : ControllerBaseApplication
     {
         private readonly IServicoAluno servicoAluno;
+
 
         public AlunosController(IServicoAluno servicoAluno)
         {
@@ -28,6 +31,19 @@ namespace alunosAPI.Controllers
         [HttpGet]
         public async Task<IActionResult> BuscarTodos()
         {
+            var teste = HttpContext?.User;
+
+            var jwt = Request.Headers["Authorization"].ToString().Replace("Bearer ", "");
+
+            var handler = new JwtSecurityTokenHandler();
+            var token = handler.ReadJwtToken(jwt);
+
+            var nomeDeUsuario = token.Claims.First(c => c.Type == "Email").Value;
+            var dataDeExpiracao = token.ValidTo;
+
+
+            var teste2 = User();
+
             var alunos = await servicoAluno.BuscarTodos();
 
             return Ok(alunos);
